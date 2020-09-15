@@ -17,14 +17,10 @@
 // This file was automatically generated from a template in ./autogen/main
 
 locals {
-  service_account_list = compact(
-    concat(
-      google_service_account.cluster_service_account.*.email,
-      ["dummy"],
-    ),
-  )
-  database_encryption_key_name = lookup(var.database_encryption, "key_name", "tf-gke-${substr(var.name, 0, min(15, length(var.name)))}-${random_string.database_kms_suffix.result}")
-  database_encryption_key_location = var.region == null ? join("-", slice(split("-", var.zone), 0, 2)) : var.region
+  database_encryption_key_name     = "tf-gke-${substr(var.name, 0, min(15, length(var.name)))}-${random_string.database_kms_suffix.result}"
+  database_encryption_key_location = local.region
+  database_encryption_key_resource = var.create_database_encryption_key ? google_kms_crypto_key.database_encryption_key[0].self_link : ""
+  database_encryption_key          = var.create_database_encryption_key ? google_kms_crypto_key.database_encryption_key[0].self_link : var.database_encryption.key_name
 }
 
 resource "random_string" "database_kms_suffix" {
@@ -35,20 +31,27 @@ resource "random_string" "database_kms_suffix" {
 }
 
 resource "google_kms_key_ring" "keyring" {
-  count    = var.create_database_encryption_key
-  name     = var.keyring_name
-  location = var.database_encryption_key_location
+  count    = var.create_database_encryption_key ? 1 : 0
+  name     = local.database_encryption_key_name
+  location = local.database_encryption_key_location
 }
 
 resource "google_kms_crypto_key" "database_encryption_key" {
-  count           = var.create_database_encryption_key
+  count           = var.create_database_encryption_key ? 1 : 0
   name            = local.database_encryption_key_name
-  key_ring        = google_kms_key_ring.keyring.id
-  rotation_period = var.databse_encryption_key_rotation_period
+  key_ring        = google_kms_key_ring.keyring[0].id
+  rotation_period = var.database_encryption_key_rotation_period
 
-  labels = local.labels
+  labels = var.kms_labels
 
   lifecycle {
     prevent_destroy = true
   }
+}
+
+resource "google_kms_crypto_key_iam_member" "database_encryption_key_encrypter_decrypter" {
+  count         = var.create_database_encryption_key ? 1 : 0
+  crypto_key_id = google_kms_crypto_key.database_encryption_key[0].id
+  role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member        = "serviceAccount:service-${data.google_project.project.number}@container-engine-robot.iam.gserviceaccount.com"
 }

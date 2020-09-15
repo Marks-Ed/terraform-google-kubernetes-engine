@@ -525,7 +525,7 @@ variable "database_encryption" {
 variable "create_database_encryption_key" {
   type        = bool
   description = "Defines if a Cloud KMS Key should be created to encrypt secrets."
-  default     = true
+  default     = false
 }
 
 variable "kms_labels" {
@@ -534,8 +534,14 @@ variable "kms_labels" {
   default     = {}
 }
 
-variable "databse_encryption_key_rotation_period" {
+variable "database_encryption_key_rotation_period" {
   type        = string
   description = "Rotation period for the KMS key, defaults to 30 days (in seconds)."
   default     = "2592000s"
+}
+
+variable "workload_identity_config" {
+  type        = bool
+  description = "Whether to enable Workload Identity on the cluster"
+  default     = false
 }

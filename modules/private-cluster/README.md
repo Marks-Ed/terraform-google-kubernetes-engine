@@ -112,10 +112,10 @@ Then perform the following commands on the root folder:
 | cluster\_ipv4\_cidr | The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR. | string | `"null"` | no |
 | cluster\_resource\_labels | The GCE resource labels (a map of key/value pairs) to be applied to the cluster | map(string) | `<map>` | no |
 | configure\_ip\_masq | Enables the installation of ip masquerading, which is usually no longer required when using aliasied IP addresses. IP masquerading uses a kubectl call, so when you have a private cluster, you will need access to the API server. | string | `"false"` | no |
-| create\_database\_encryption\_key | Defines if a Cloud KMS Key should be created to encrypt secrets. | bool | `"true"` | no |
+| create\_database\_encryption\_key | Defines if a Cloud KMS Key should be created to encrypt secrets. | bool | `"false"` | no |
 | create\_service\_account | Defines if service account specified to run nodes should be created. | bool | `"true"` | no |
 | database\_encryption | Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption | map(string) | `<map>` | no |
-| databse\_encryption\_key\_rotation\_period | Rotation period for the KMS key, defaults to 30 days (in seconds). | string | `"2592000s"` | no |
+| database\_encryption\_key\_rotation\_period | Rotation period for the KMS key, defaults to 30 days (in seconds). | string | `"2592000s"` | no |
 | default\_max\_pods\_per\_node | The maximum number of pods to schedule per node | string | `"110"` | no |
 | deploy\_using\_private\_endpoint | (Beta) A toggle for Terraform and kubectl to connect to the master's internal IP address during deployment. | bool | `"false"` | no |
 | description | The description of the cluster | string | `""` | no |
@@ -166,6 +166,7 @@ Then perform the following commands on the root folder:
 | stub\_domains | Map of stub domains and their resolvers to forward DNS queries for a certain domain to an external DNS server | map(list(string)) | `<map>` | no |
 | subnetwork | The subnetwork to host the cluster in (required) | string | n/a | yes |
 | upstream\_nameservers | If specified, the values replace the nameservers taken by default from the node’s /etc/resolv.conf | list(string) | `<list>` | no |
+| workload\_identity\_config | Whether to enable Workload Identity on the cluster | bool | `"false"` | no |
 | zones | The zones to host the cluster in (optional if regional cluster / required if zonal) | list(string) | `<list>` | no |
 
 ## Outputs

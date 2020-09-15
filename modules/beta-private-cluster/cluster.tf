@@ -226,11 +226,11 @@ resource "google_container_cluster" "primary" {
   }
 
   dynamic "database_encryption" {
-    for_each = local.database_encryption
+    for_each = { 0 = var.database_encryption }
 
     content {
-      state    = database_encryption.state
-      key_name = local.database_encryption_key_name
+      state    = database_encryption.value.state
+      key_name = local.database_encryption_key
     }
   }
 
@@ -287,6 +287,8 @@ resource "google_container_cluster" "primary" {
       security_group = authenticator_groups_config.value.security_group
     }
   }
+
+  depends_on = [google_kms_crypto_key_iam_member.database_encryption_key_encrypter_decrypter]
 }
 
 /******************************************
