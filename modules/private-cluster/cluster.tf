@@ -134,6 +134,23 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  dynamic "database_encryption" {
+    for_each = local.database_encryption
+
+    content {
+      state    = database_encryption.state
+      key_name = local.database_encryption_key_name
+    }
+  }
+
+  dynamic "workload_identity_config" {
+    for_each = var.workload_identity_config ? [1] : []
+
+    content {
+      identity_namespace = "${var.project_id}.svc.id.goog"
+    }
+  }
+
   dynamic "private_cluster_config" {
     for_each = var.enable_private_nodes ? [{
       enable_private_nodes    = var.enable_private_nodes,

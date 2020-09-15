@@ -546,3 +546,27 @@ variable "disable_default_snat" {
   description = "Whether to disable the default SNAT to support the private use of public IP addresses"
   default     = false
 }
+
+variable "database_encryption" {
+  type        = map(string)
+  description = "Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption"
+  default     = {}
+}
+
+variable "create_database_encryption_key" {
+  type        = bool
+  description = "Defines if a Cloud KMS Key should be created to encrypt secrets."
+  default     = true
+}
+
+variable "kms_labels" {
+  type        = map(string)
+  description = "The labels (a map of key/value pairs) to be applied to the kms database encryption key"
+  default     = {}
+}
+
+variable "databse_encryption_key_rotation_period" {
+  type        = string
+  description = "Rotation period for the KMS key, defaults to 30 days (in seconds)."
+  default     = "2592000s"
+}
