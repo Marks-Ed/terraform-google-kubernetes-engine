@@ -156,7 +156,6 @@ Then perform the following commands on the root folder:
 | configure\_ip\_masq | Enables the installation of ip masquerading, which is usually no longer required when using aliasied IP addresses. IP masquerading uses a kubectl call, so when you have a private cluster, you will need access to the API server. | string | `"false"` | no |
 | create\_database\_encryption\_key | Defines if a Cloud KMS Key should be created to encrypt secrets. | bool | `"false"` | no |
 | create\_service\_account | Defines if service account specified to run nodes should be created. | bool | `"true"` | no |
-| database\_encryption | Application-layer Secrets Encryption settings. The object format is {state = string, key_name = string}. Valid values of state are: "ENCRYPTED"; "DECRYPTED". key_name is the name of a CloudKMS key. | object | `<list>` | no |
 | database\_encryption | Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption | map(string) | `<map>` | no |
 | database\_encryption\_key\_rotation\_period | Rotation period for the KMS key, defaults to 30 days (in seconds). | string | `"2592000s"` | no |
 | default\_max\_pods\_per\_node | The maximum number of pods to schedule per node | string | `"110"` | no |
@@ -229,7 +228,6 @@ Then perform the following commands on the root folder:
 | stub\_domains | Map of stub domains and their resolvers to forward DNS queries for a certain domain to an external DNS server | map(list(string)) | `<map>` | no |
 | subnetwork | The subnetwork to host the cluster in (required) | string | n/a | yes |
 | upstream\_nameservers | If specified, the values replace the nameservers taken by default from the node’s /etc/resolv.conf | list(string) | `<list>` | no |
-| workload\_identity\_config | Whether to enable Workload Identity on the cluster | bool | `"false"` | no |
 | zones | The zones to host the cluster in (optional if regional cluster / required if zonal) | list(string) | `<list>` | no |
 
 ## Outputs
@@ -238,6 +236,7 @@ Then perform the following commands on the root folder:
 |------|-------------|
 | ca\_certificate | Cluster ca certificate (base64 encoded) |
 | cloudrun\_enabled | Whether CloudRun enabled |
+| database\_encryption\_key | The self_link of the kms crypto key used to encrypt secrets |
 | dns\_cache\_enabled | Whether DNS Cache enabled |
 | endpoint | Cluster endpoint |
 | horizontal\_pod\_autoscaling\_enabled | Whether horizontal pod autoscaling enabled |

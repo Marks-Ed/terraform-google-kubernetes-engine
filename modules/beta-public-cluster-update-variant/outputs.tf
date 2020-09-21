@@ -119,6 +119,11 @@ output "service_account" {
   value       = local.service_account
 }
 
+output "database_encryption_key" {
+  description = "The self_link of the kms crypto key used to encrypt secrets"
+  value       = local.database_encryption_key
+}
+
 output "istio_enabled" {
   description = "Whether Istio is enabled"
   value       = local.cluster_istio_enabled

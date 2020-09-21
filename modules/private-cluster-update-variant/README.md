@@ -153,6 +153,7 @@ Then perform the following commands on the root folder:
 | grant\_registry\_access | Grants created cluster-specific service account storage.objectViewer role. | bool | `"false"` | no |
 | horizontal\_pod\_autoscaling | Enable horizontal pod autoscaling addon | bool | `"true"` | no |
 | http\_load\_balancing | Enable httpload balancer addon | bool | `"true"` | no |
+| identity\_namespace | Workload Identity namespace. (Default value of `enabled` automatically sets project based namespace `[project_id].svc.id.goog`) | string | `"enabled"` | no |
 | initial\_node\_count | The number of nodes to create in this cluster's default node pool. | number | `"0"` | no |
 | ip\_masq\_link\_local | Whether to masquerade traffic to the link-local prefix (169.254.0.0/16). | bool | `"false"` | no |
 | ip\_masq\_resync\_interval | The interval at which the agent attempts to sync its ConfigMap file from the disk. | string | `"60s"` | no |
@@ -188,7 +189,6 @@ Then perform the following commands on the root folder:
 | stub\_domains | Map of stub domains and their resolvers to forward DNS queries for a certain domain to an external DNS server | map(list(string)) | `<map>` | no |
 | subnetwork | The subnetwork to host the cluster in (required) | string | n/a | yes |
 | upstream\_nameservers | If specified, the values replace the nameservers taken by default from the node’s /etc/resolv.conf | list(string) | `<list>` | no |
-| workload\_identity\_config | Whether to enable Workload Identity on the cluster | bool | `"false"` | no |
 | zones | The zones to host the cluster in (optional if regional cluster / required if zonal) | list(string) | `<list>` | no |
 
 ## Outputs
@@ -196,6 +196,7 @@ Then perform the following commands on the root folder:
 | Name | Description |
 |------|-------------|
 | ca\_certificate | Cluster ca certificate (base64 encoded) |
+| database\_encryption\_key | The self_link of the kms crypto key used to encrypt secrets |
 | endpoint | Cluster endpoint |
 | horizontal\_pod\_autoscaling\_enabled | Whether horizontal pod autoscaling enabled |
 | http\_load\_balancing\_enabled | Whether http load balancing enabled |

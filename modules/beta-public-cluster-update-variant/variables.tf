@@ -369,6 +369,36 @@ variable "default_max_pods_per_node" {
   default     = 110
 }
 
+variable "identity_namespace" {
+  description = "Workload Identity namespace. (Default value of `enabled` automatically sets project based namespace `[project_id].svc.id.goog`)"
+  type        = string
+  default     = "enabled"
+}
+
+variable "database_encryption" {
+  type        = map(string)
+  description = "Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption"
+  default     = {}
+}
+
+variable "create_database_encryption_key" {
+  type        = bool
+  description = "Defines if a Cloud KMS Key should be created to encrypt secrets."
+  default     = false
+}
+
+variable "kms_labels" {
+  type        = map(string)
+  description = "The labels (a map of key/value pairs) to be applied to the kms database encryption key"
+  default     = {}
+}
+
+variable "database_encryption_key_rotation_period" {
+  type        = string
+  description = "Rotation period for the KMS key, defaults to 30 days (in seconds)."
+  default     = "2592000s"
+}
+
 
 variable "istio" {
   description = "(Beta) Enable Istio addon"
@@ -403,16 +433,6 @@ variable "config_connector" {
   type        = bool
   description = "(Beta) Whether ConfigConnector is enabled for this cluster."
   default     = false
-}
-
-variable "database_encryption" {
-  description = "Application-layer Secrets Encryption settings. The object format is {state = string, key_name = string}. Valid values of state are: \"ENCRYPTED\"; \"DECRYPTED\". key_name is the name of a CloudKMS key."
-  type        = list(object({ state = string, key_name = string }))
-
-  default = [{
-    state    = "DECRYPTED"
-    key_name = ""
-  }]
 }
 
 variable "cloudrun" {
@@ -453,12 +473,6 @@ variable "enable_vertical_pod_autoscaling" {
   type        = bool
   description = "Vertical Pod Autoscaling automatically adjusts the resources of pods controlled by it"
   default     = false
-}
-
-variable "identity_namespace" {
-  description = "Workload Identity namespace. (Default value of `enabled` automatically sets project based namespace `[project_id].svc.id.goog`)"
-  type        = string
-  default     = "enabled"
 }
 
 variable "authenticator_security_group" {
@@ -513,35 +527,5 @@ variable "gcloud_skip_download" {
 variable "disable_default_snat" {
   type        = bool
   description = "Whether to disable the default SNAT to support the private use of public IP addresses"
-  default     = false
-}
-
-variable "database_encryption" {
-  type        = map(string)
-  description = "Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption"
-  default     = {}
-}
-
-variable "create_database_encryption_key" {
-  type        = bool
-  description = "Defines if a Cloud KMS Key should be created to encrypt secrets."
-  default     = false
-}
-
-variable "kms_labels" {
-  type        = map(string)
-  description = "The labels (a map of key/value pairs) to be applied to the kms database encryption key"
-  default     = {}
-}
-
-variable "database_encryption_key_rotation_period" {
-  type        = string
-  description = "Rotation period for the KMS key, defaults to 30 days (in seconds)."
-  default     = "2592000s"
-}
-
-variable "workload_identity_config" {
-  type        = bool
-  description = "Whether to enable Workload Identity on the cluster"
   default     = false
 }

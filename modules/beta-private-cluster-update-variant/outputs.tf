@@ -119,6 +119,11 @@ output "service_account" {
   value       = local.service_account
 }
 
+output "database_encryption_key" {
+  description = "The self_link of the kms crypto key used to encrypt secrets"
+  value       = local.database_encryption_key
+}
+
 output "master_ipv4_cidr_block" {
   description = "The IP range in CIDR notation used for the hosted master network"
   value       = var.master_ipv4_cidr_block

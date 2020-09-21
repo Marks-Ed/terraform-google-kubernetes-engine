@@ -144,10 +144,10 @@ resource "google_container_cluster" "primary" {
   }
 
   dynamic "workload_identity_config" {
-    for_each = var.workload_identity_config ? [1] : []
+    for_each = local.cluster_workload_identity_config
 
     content {
-      identity_namespace = "${var.project_id}.svc.id.goog"
+      identity_namespace = workload_identity_config.value.identity_namespace
     }
   }
 

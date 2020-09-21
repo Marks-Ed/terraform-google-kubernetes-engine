@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-locals {
-  cluster_type = "simple-zonal"
+output "kubernetes_endpoint" {
+  sensitive = true
+  value     = module.gke.endpoint
 }
 
-provider "google" {
-  version = "~> 3.35.0"
-  region  = var.region
+output "client_token" {
+  sensitive = true
+  value     = base64encode(data.google_client_config.default.access_token)
 }
 
-module "gke" {
-  source            = "../../"
-  project_id        = var.project_id
-  name              = "${local.cluster_type}-cluster${var.cluster_name_suffix}"
-  regional          = false
-  region            = var.region
-  zones             = var.zones
-  network           = var.network
-  subnetwork        = var.subnetwork
-  ip_range_pods     = var.ip_range_pods
-  ip_range_services = var.ip_range_services
-  service_account   = "create"
+output "ca_certificate" {
+  value = module.gke.ca_certificate
 }
 
-data "google_client_config" "default" {
+output "service_account" {
+  description = "The default service account used for running nodes."
+  value       = module.gke.service_account
 }
+
