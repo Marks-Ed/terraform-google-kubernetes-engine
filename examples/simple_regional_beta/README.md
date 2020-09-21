@@ -10,7 +10,7 @@ This example illustrates how to create a simple cluster with beta features.
 | cloudrun | Boolean to enable / disable CloudRun | string | `"true"` | no |
 | cluster\_name\_suffix | A suffix to append to the default cluster name | string | `""` | no |
 | compute\_engine\_service\_account | Service account to associate to the nodes in the cluster | string | n/a | yes |
-| database\_encryption | Application-layer Secrets Encryption settings. The object format is {state = string, key_name = string}. Valid values of state are: "ENCRYPTED"; "DECRYPTED". key_name is the name of a CloudKMS key. | object | `<list>` | no |
+| database\_encryption | Application-layer Secrets Encryption settings. The object format is {state = string, key_name = string}. Valid values of state are: "ENCRYPTED"; "DECRYPTED". key_name is the name of a CloudKMS key. | map(string) | `<map>` | no |
 | dns\_cache | (Beta) The status of the NodeLocal DNSCache addon. | bool | `"false"` | no |
 | enable\_binary\_authorization | Enable BinAuthZ Admission controller | string | `"false"` | no |
 | enable\_pod\_security\_policy | enabled - Enable the PodSecurityPolicy controller for this cluster. If enabled, pods must be valid under a PodSecurityPolicy to be created. | bool | `"false"` | no |

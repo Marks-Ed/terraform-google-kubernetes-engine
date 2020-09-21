@@ -134,6 +134,23 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+  dynamic "database_encryption" {
+    for_each = { 0 = var.database_encryption }
+
+    content {
+      state    = database_encryption.value.state
+      key_name = local.database_encryption_key
+    }
+  }
+
+  dynamic "workload_identity_config" {
+    for_each = local.cluster_workload_identity_config
+
+    content {
+      identity_namespace = workload_identity_config.value.identity_namespace
+    }
+  }
+
   dynamic "private_cluster_config" {
     for_each = var.enable_private_nodes ? [{
       enable_private_nodes    = var.enable_private_nodes,
@@ -149,6 +166,8 @@ resource "google_container_cluster" "primary" {
   }
 
   remove_default_node_pool = var.remove_default_node_pool
+
+  depends_on = [google_kms_crypto_key_iam_member.database_encryption_key_encrypter_decrypter]
 }
 
 /******************************************

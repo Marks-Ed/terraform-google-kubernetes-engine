@@ -114,6 +114,13 @@ locals {
   cluster_http_load_balancing_enabled        = ! local.cluster_output_http_load_balancing_enabled
   cluster_horizontal_pod_autoscaling_enabled = ! local.cluster_output_horizontal_pod_autoscaling_enabled
 
+  workload_identity_enabled = ! (var.identity_namespace == null || var.identity_namespace == "null")
+
+  cluster_workload_identity_config = ! local.workload_identity_enabled ? [] : var.identity_namespace == "enabled" ? [{
+    identity_namespace = "${var.project_id}.svc.id.goog" }] : [{ identity_namespace = var.identity_namespace
+  }]
+
+
 }
 
 /******************************************
@@ -131,4 +138,8 @@ data "google_container_engine_versions" "zone" {
   //
   location = local.zone_count == 0 ? data.google_compute_zones.available.names[0] : var.zones[0]
   project  = var.project_id
+}
+
+data "google_project" "project" {
+  project_id = var.project_id
 }

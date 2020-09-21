@@ -206,7 +206,9 @@ For simplicity, we suggest using `roles/container.admin` and
 | cluster\_resource\_labels | The GCE resource labels (a map of key/value pairs) to be applied to the cluster | map(string) | `<map>` | no |
 | compute\_engine\_service\_account | Use the given service account for nodes rather than creating a new dedicated service account. | string | `""` | no |
 | config\_connector | (Beta) Whether ConfigConnector is enabled for this cluster. | bool | `"false"` | no |
-| database\_encryption | Application-layer Secrets Encryption settings. The object format is {state = string, key_name = string}. Valid values of state are: "ENCRYPTED"; "DECRYPTED". key_name is the name of a CloudKMS key. | object | `<list>` | no |
+| create\_database\_encryption\_key | Defines if a Cloud KMS Key should be created to encrypt secrets. | bool | `"false"` | no |
+| database\_encryption | Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption | map(string) | `<map>` | no |
+| database\_encryption\_key\_rotation\_period | Rotation period for the KMS key, defaults to 30 days (in seconds). | string | `"2592000s"` | no |
 | default\_max\_pods\_per\_node | The maximum number of pods to schedule per node | string | `"110"` | no |
 | description | The description of the cluster | string | `""` | no |
 | disable\_default\_snat | Whether to disable the default SNAT to support the private use of public IP addresses | bool | `"false"` | no |
@@ -229,6 +231,7 @@ For simplicity, we suggest using `roles/container.admin` and
 | ip\_range\_services | The _name_ of the secondary subnet range to use for services | string | n/a | yes |
 | istio | (Beta) Enable Istio addon | string | `"false"` | no |
 | istio\_auth | (Beta) The authentication type between services in Istio. | string | `"AUTH_MUTUAL_TLS"` | no |
+| kms\_labels | The labels (a map of key/value pairs) to be applied to the kms database encryption key | map(string) | `<map>` | no |
 | kubernetes\_version | The Kubernetes version of the masters. If set to 'latest' it will pull latest available version in the selected region. The module enforces certain minimum versions to ensure that specific features are available. | string | `"null"` | no |
 | logging\_service | The logging service that the cluster should write logs to. Available options include logging.googleapis.com, logging.googleapis.com/kubernetes (beta), and none | string | `"logging.googleapis.com/kubernetes"` | no |
 | maintenance\_start\_time | Time window specified for daily maintenance operations in RFC3339 format | string | `"05:00"` | no |

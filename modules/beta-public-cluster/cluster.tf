@@ -225,15 +225,12 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-
-  remove_default_node_pool = var.remove_default_node_pool
-
   dynamic "database_encryption" {
-    for_each = var.database_encryption
+    for_each = { 0 = var.database_encryption }
 
     content {
-      key_name = database_encryption.value.key_name
       state    = database_encryption.value.state
+      key_name = local.database_encryption_key
     }
   }
 
@@ -245,12 +242,18 @@ resource "google_container_cluster" "primary" {
     }
   }
 
+
+  remove_default_node_pool = var.remove_default_node_pool
+
+
   dynamic "authenticator_groups_config" {
     for_each = local.cluster_authenticator_security_group
     content {
       security_group = authenticator_groups_config.value.security_group
     }
   }
+
+  depends_on = [google_kms_crypto_key_iam_member.database_encryption_key_encrypter_decrypter]
 }
 
 /******************************************

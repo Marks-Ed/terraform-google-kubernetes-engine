@@ -320,6 +320,36 @@ variable "default_max_pods_per_node" {
   default     = 110
 }
 
+variable "identity_namespace" {
+  description = "Workload Identity namespace. (Default value of `enabled` automatically sets project based namespace `[project_id].svc.id.goog`)"
+  type        = string
+  default     = "enabled"
+}
+
+variable "database_encryption" {
+  type        = map(string)
+  description = "Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption"
+  default     = {}
+}
+
+variable "create_database_encryption_key" {
+  type        = bool
+  description = "Defines if a Cloud KMS Key should be created to encrypt secrets."
+  default     = false
+}
+
+variable "kms_labels" {
+  type        = map(string)
+  description = "The labels (a map of key/value pairs) to be applied to the kms database encryption key"
+  default     = {}
+}
+
+variable "database_encryption_key_rotation_period" {
+  type        = string
+  description = "Rotation period for the KMS key, defaults to 30 days (in seconds)."
+  default     = "2592000s"
+}
+
 variable "deploy_using_private_endpoint" {
   type        = bool
   description = "(Beta) A toggle for Terraform and kubectl to connect to the master's internal IP address during deployment."

@@ -112,7 +112,10 @@ Then perform the following commands on the root folder:
 | cluster\_ipv4\_cidr | The IP address range of the kubernetes pods in this cluster. Default is an automatically assigned CIDR. | string | `"null"` | no |
 | cluster\_resource\_labels | The GCE resource labels (a map of key/value pairs) to be applied to the cluster | map(string) | `<map>` | no |
 | configure\_ip\_masq | Enables the installation of ip masquerading, which is usually no longer required when using aliasied IP addresses. IP masquerading uses a kubectl call, so when you have a private cluster, you will need access to the API server. | string | `"false"` | no |
+| create\_database\_encryption\_key | Defines if a Cloud KMS Key should be created to encrypt secrets. | bool | `"false"` | no |
 | create\_service\_account | Defines if service account specified to run nodes should be created. | bool | `"true"` | no |
+| database\_encryption | Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption | map(string) | `<map>` | no |
+| database\_encryption\_key\_rotation\_period | Rotation period for the KMS key, defaults to 30 days (in seconds). | string | `"2592000s"` | no |
 | default\_max\_pods\_per\_node | The maximum number of pods to schedule per node | string | `"110"` | no |
 | deploy\_using\_private\_endpoint | (Beta) A toggle for Terraform and kubectl to connect to the master's internal IP address during deployment. | bool | `"false"` | no |
 | description | The description of the cluster | string | `""` | no |
@@ -128,12 +131,14 @@ Then perform the following commands on the root folder:
 | grant\_registry\_access | Grants created cluster-specific service account storage.objectViewer role. | bool | `"false"` | no |
 | horizontal\_pod\_autoscaling | Enable horizontal pod autoscaling addon | bool | `"true"` | no |
 | http\_load\_balancing | Enable httpload balancer addon | bool | `"true"` | no |
+| identity\_namespace | Workload Identity namespace. (Default value of `enabled` automatically sets project based namespace `[project_id].svc.id.goog`) | string | `"enabled"` | no |
 | initial\_node\_count | The number of nodes to create in this cluster's default node pool. | number | `"0"` | no |
 | ip\_masq\_link\_local | Whether to masquerade traffic to the link-local prefix (169.254.0.0/16). | bool | `"false"` | no |
 | ip\_masq\_resync\_interval | The interval at which the agent attempts to sync its ConfigMap file from the disk. | string | `"60s"` | no |
 | ip\_range\_pods | The _name_ of the secondary subnet ip range to use for pods | string | n/a | yes |
 | ip\_range\_services | The _name_ of the secondary subnet range to use for services | string | n/a | yes |
 | issue\_client\_certificate | Issues a client certificate to authenticate to the cluster endpoint. To maximize the security of your cluster, leave this option disabled. Client certificates don't automatically rotate and aren't easily revocable. WARNING: changing this after cluster creation is destructive! | bool | `"false"` | no |
+| kms\_labels | The labels (a map of key/value pairs) to be applied to the kms database encryption key | map(string) | `<map>` | no |
 | kubernetes\_version | The Kubernetes version of the masters. If set to 'latest' it will pull latest available version in the selected region. | string | `"latest"` | no |
 | logging\_service | The logging service that the cluster should write logs to. Available options include logging.googleapis.com, logging.googleapis.com/kubernetes (beta), and none | string | `"logging.googleapis.com/kubernetes"` | no |
 | maintenance\_start\_time | Time window specified for daily or recurring maintenance operations in RFC3339 format | string | `"05:00"` | no |
@@ -169,6 +174,7 @@ Then perform the following commands on the root folder:
 | Name | Description |
 |------|-------------|
 | ca\_certificate | Cluster ca certificate (base64 encoded) |
+| database\_encryption\_key | The self_link of the kms crypto key used to encrypt secrets |
 | endpoint | Cluster endpoint |
 | horizontal\_pod\_autoscaling\_enabled | Whether horizontal pod autoscaling enabled |
 | http\_load\_balancing\_enabled | Whether http load balancing enabled |

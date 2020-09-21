@@ -132,8 +132,10 @@ Then perform the following commands on the root folder:
 | cluster\_resource\_labels | The GCE resource labels (a map of key/value pairs) to be applied to the cluster | map(string) | `<map>` | no |
 | config\_connector | (Beta) Whether ConfigConnector is enabled for this cluster. | bool | `"false"` | no |
 | configure\_ip\_masq | Enables the installation of ip masquerading, which is usually no longer required when using aliasied IP addresses. IP masquerading uses a kubectl call, so when you have a private cluster, you will need access to the API server. | string | `"false"` | no |
+| create\_database\_encryption\_key | Defines if a Cloud KMS Key should be created to encrypt secrets. | bool | `"false"` | no |
 | create\_service\_account | Defines if service account specified to run nodes should be created. | bool | `"true"` | no |
-| database\_encryption | Application-layer Secrets Encryption settings. The object format is {state = string, key_name = string}. Valid values of state are: "ENCRYPTED"; "DECRYPTED". key_name is the name of a CloudKMS key. | object | `<list>` | no |
+| database\_encryption | Enable Application-layer Secrets Encryption. If key_name is empty, kms key will be created. Format is the same as described in provider documentation: https://www.terraform.io/docs/providers/google/r/container_cluster.html#database_encryption | map(string) | `<map>` | no |
+| database\_encryption\_key\_rotation\_period | Rotation period for the KMS key, defaults to 30 days (in seconds). | string | `"2592000s"` | no |
 | default\_max\_pods\_per\_node | The maximum number of pods to schedule per node | string | `"110"` | no |
 | deploy\_using\_private\_endpoint | (Beta) A toggle for Terraform and kubectl to connect to the master's internal IP address during deployment. | bool | `"false"` | no |
 | description | The description of the cluster | string | `""` | no |
@@ -168,6 +170,7 @@ Then perform the following commands on the root folder:
 | istio | (Beta) Enable Istio addon | string | `"false"` | no |
 | istio\_auth | (Beta) The authentication type between services in Istio. | string | `"AUTH_MUTUAL_TLS"` | no |
 | kalm\_config | (Beta) Whether KALM is enabled for this cluster. | bool | `"false"` | no |
+| kms\_labels | The labels (a map of key/value pairs) to be applied to the kms database encryption key | map(string) | `<map>` | no |
 | kubernetes\_version | The Kubernetes version of the masters. If set to 'latest' it will pull latest available version in the selected region. | string | `"latest"` | no |
 | logging\_service | The logging service that the cluster should write logs to. Available options include logging.googleapis.com, logging.googleapis.com/kubernetes (beta), and none | string | `"logging.googleapis.com/kubernetes"` | no |
 | maintenance\_end\_time | Time window specified for recurring maintenance operations in RFC3339 format | string | `""` | no |
@@ -211,6 +214,7 @@ Then perform the following commands on the root folder:
 |------|-------------|
 | ca\_certificate | Cluster ca certificate (base64 encoded) |
 | cloudrun\_enabled | Whether CloudRun enabled |
+| database\_encryption\_key | The self_link of the kms crypto key used to encrypt secrets |
 | dns\_cache\_enabled | Whether DNS Cache enabled |
 | endpoint | Cluster endpoint |
 | horizontal\_pod\_autoscaling\_enabled | Whether horizontal pod autoscaling enabled |
